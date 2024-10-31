@@ -6,6 +6,23 @@ interface Message {
   content: string;
 }
 
+// 快捷提示数组
+const quickPrompts = [
+  {
+    text: "你是谁？",
+    icon: "👋"
+  },
+  {
+    text: "你能做什么？",
+    icon: "💡"
+  },
+  {
+    text: "如何联系你？",
+    icon: "📧"
+  }
+];
+
+
 export default function ChatAssistant() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -16,6 +33,13 @@ export default function ChatAssistant() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   
+  const handleQuickPrompt = (prompt: string) => {
+    setInput(prompt);
+    const syntheticEvent = {
+      preventDefault: () => {}
+    } as React.FormEvent;
+    handleSubmit(syntheticEvent);
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -214,11 +238,27 @@ export default function ChatAssistant() {
 
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.length === 0 && (
+                <>
                 <div className="text-center text-gray-500 mt-8">
                   <p>你好！我是陈定钢，一名AI模型开发工程师。</p>
                   <p className="mt-2">有什么我可以帮你的吗？</p>
                 </div>
-              )}
+
+                {/* 快捷提示按钮 */}
+                <div className="flex flex-wrap gap-2 justify-center mt-6">
+                  {quickPrompts.map((prompt, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleQuickPrompt(prompt.text)}
+                      className="group flex items-center gap-2 bg-white border border-gray-200 hover:border-blue-500 hover:bg-blue-50 rounded-full px-4 py-2 text-sm text-gray-700 transition-all duration-200"
+                    >
+                      <span className="text-base">{prompt.icon}</span>
+                      <span className="group-hover:text-blue-600">{prompt.text}</span>
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
               
               {messages.map((message, index) => (
                 <div
