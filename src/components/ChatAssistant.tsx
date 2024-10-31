@@ -46,7 +46,7 @@ export default function ChatAssistant() {
     setStreamingResponse('');
   
     try {
-      const response = await fetch('https://groq.945036663.workers.dev/', {
+      const response = await fetch('https://groq-api.newestgpt.com/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
