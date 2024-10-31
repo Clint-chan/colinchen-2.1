@@ -80,7 +80,7 @@ export default function Hero() {
         <div className="mb-8 relative group">
           <div className="absolute inset-0 bg-blue-600/10 rounded-full blur-3xl transform -translate-y-4 group-hover:scale-110 transition-transform duration-500" />
           <img
-            src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=400&h=400&fit=crop"
+            src="https://gptalk1.oss-cn-hangzhou.aliyuncs.com/img/%E5%A4%B4%E5%83%8F.jpg"
             alt="Profile"
             className="w-32 h-32 rounded-full mx-auto shadow-lg ring-4 ring-white relative group-hover:scale-105 transition-transform duration-500"
           />
