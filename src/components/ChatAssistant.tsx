@@ -33,24 +33,22 @@ export default function ChatAssistant() {
 
     return cleanup;
   }, []);
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
-  
+
     const userMessage = { role: 'user' as const, content: input.trim() };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setError(null);
     setIsLoading(true);
-    setStreamingResponse(''); // 重置流式响应
-  
+    setStreamingResponse('');
+
     try {
-      const response = await fetch('https://api.cloudflare.com/client/v4/accounts/bae34f3ac025ddecd84584f1e1fe15a7/ai/run/@cf/meta/llama-3-8b-instruct', {
+      const response = await fetch('https://chat-api.945036663.workers.dev', { // 替换为你的 Worker URL
         method: 'POST',
         headers: {
-          'Authorization': 'Bearer vsIzU_664pKkIg4xx2JQQMzPxphcXW-WqorLqVsX',
-          'Accept': 'text/event-stream',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -62,30 +60,30 @@ export default function ChatAssistant() {
           stream: true
         }),
       });
-  
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-  
+
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
       let fullResponse = '';
-  
+
       if (reader) {
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
-  
+
           const chunk = decoder.decode(value);
           const lines = chunk.split('\n');
-  
+
           for (const line of lines) {
             if (line.startsWith('data: ')) {
               try {
                 const data = JSON.parse(line.slice(6));
                 if (data.response) {
                   fullResponse += data.response;
-                  setStreamingResponse(fullResponse); // 更新流式响应
+                  setStreamingResponse(fullResponse);
                 }
               } catch (e) {
                 console.error('Error parsing SSE data:', e);
@@ -93,8 +91,7 @@ export default function ChatAssistant() {
             }
           }
         }
-  
-        // 流式响应完成后，添加到消息列表
+
         setMessages(prev => [...prev, {
           role: 'assistant',
           content: fullResponse
@@ -105,9 +102,10 @@ export default function ChatAssistant() {
       console.error('Chat error:', error);
     } finally {
       setIsLoading(false);
-      setStreamingResponse(''); // 清空流式响应
+      setStreamingResponse('');
     }
   };
+
   
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
