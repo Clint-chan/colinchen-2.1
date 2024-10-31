@@ -46,7 +46,7 @@ export default function ChatAssistant() {
     setStreamingResponse('');
   
     try {
-      const response = await fetch('https://groq-api.newestgpt.com', {
+      const response = await fetch('https://groq-api.newestgpt.com/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -59,17 +59,12 @@ export default function ChatAssistant() {
             },
             ...messages,
             userMessage
-          ],
-          model: "llama-3.2-90b-text-preview", // 添加模型参数
-          temperature: 1,
-          max_tokens: 1024,
-          top_p: 1,
-          stream: true
+          ]
         }),
       });
   
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
   
       const reader = response.body?.getReader();
@@ -88,7 +83,6 @@ export default function ChatAssistant() {
             if (line.startsWith('data: ')) {
               try {
                 const data = JSON.parse(line.slice(6));
-                // 修改这里以适应 Groq 的响应格式
                 if (data.choices?.[0]?.delta?.content) {
                   const content = data.choices[0].delta.content;
                   fullResponse += content;
@@ -115,9 +109,6 @@ export default function ChatAssistant() {
     }
   };
   
-
-  
-
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
