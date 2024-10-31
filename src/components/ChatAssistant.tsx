@@ -9,15 +9,15 @@ interface Message {
 // 快捷提示数组
 const quickPrompts = [
   {
-    text: "你是谁？",
+    text: "你是谁？擅长做什么",
     icon: "👋"
   },
   {
-    text: "你能做什么？",
+    text: "你平时喜欢做什么",
     icon: "💡"
   },
   {
-    text: "如何联系你？",
+    text: "如何联系你呢？",
     icon: "📧"
   }
 ];
