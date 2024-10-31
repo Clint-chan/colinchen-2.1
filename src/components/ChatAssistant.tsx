@@ -180,19 +180,29 @@ export default function ChatAssistant() {
 
   return (
     <>
-      <button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-colors z-50 flex items-center justify-center"
-        aria-label="Open chat"
-      >
-        <MessageCircle size={24} />
-      </button>
+      <div className="fixed bottom-6 right-6 z-50">
+        <div className="group relative">
+          <button
+            onClick={() => setIsOpen(true)}
+            className="bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-colors flex items-center justify-center"
+            aria-label="Open chat"
+          >
+            <MessageCircle size={24} />
+          </button>
+          
+          {/* 提示语 */}
+          <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 px-3 py-2 bg-gray-800 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+            点击这里跟我聊天
+          </div>
+        </div>
+      </div>
+
 
       {isOpen && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" role="dialog">
           <div className="bg-white rounded-2xl w-full max-w-md h-[600px] flex flex-col relative animate-in fade-in duration-200">
             <div className="p-4 border-b flex justify-between items-center">
-              <h3 className="text-lg font-semibold">AI 助手</h3>
+              <h3 className="text-lg font-semibold">陈定钢</h3>
               <button
                 onClick={() => setIsOpen(false)}
                 className="text-gray-500 hover:text-gray-700 p-1 rounded-lg hover:bg-gray-100 transition-colors"
