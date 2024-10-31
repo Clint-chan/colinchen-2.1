@@ -37,16 +37,16 @@ export default function ChatAssistant() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
-  
+
     const userMessage = { role: 'user' as const, content: input.trim() };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setError(null);
     setIsLoading(true);
     setStreamingResponse('');
-  
+
     try {
-      const response = await fetch('https://groq-api.newestgpt.com/', {
+      const response = await fetch('https://chat-api.newestgpt.com', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -119,33 +119,33 @@ export default function ChatAssistant() {
             },
             ...messages,
             userMessage
-          ]
+          ],
+          stream: true
         }),
       });
-  
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error('Network response was not ok');
       }
-  
+
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
       let fullResponse = '';
-  
+
       if (reader) {
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
-  
+
           const chunk = decoder.decode(value);
           const lines = chunk.split('\n');
-  
+
           for (const line of lines) {
             if (line.startsWith('data: ')) {
               try {
                 const data = JSON.parse(line.slice(6));
-                if (data.choices?.[0]?.delta?.content) {
-                  const content = data.choices[0].delta.content;
-                  fullResponse += content;
+                if (data.response) {
+                  fullResponse += data.response;
                   setStreamingResponse(fullResponse);
                 }
               } catch (e) {
@@ -154,7 +154,7 @@ export default function ChatAssistant() {
             }
           }
         }
-  
+
         setMessages(prev => [...prev, {
           role: 'assistant',
           content: fullResponse
@@ -168,7 +168,9 @@ export default function ChatAssistant() {
       setStreamingResponse('');
     }
   };
+
   
+
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
