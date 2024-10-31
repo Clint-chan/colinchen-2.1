@@ -12,7 +12,10 @@ export default function ChatAssistant() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [streamingResponse, setStreamingResponse] = useState(''); // 新增这行
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -22,21 +25,32 @@ export default function ChatAssistant() {
     scrollToBottom();
   }, [messages]);
 
+  useEffect(() => {
+    const cleanup = () => {
+      setStreamingResponse('');
+      setIsLoading(false);
+    };
+
+    return cleanup;
+  }, []);
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
-
+  
     const userMessage = { role: 'user' as const, content: input.trim() };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setError(null);
     setIsLoading(true);
-
+    setStreamingResponse(''); // 重置流式响应
+  
     try {
       const response = await fetch('https://api.cloudflare.com/client/v4/accounts/bae34f3ac025ddecd84584f1e1fe15a7/ai/run/@cf/meta/llama-3-8b-instruct', {
         method: 'POST',
         headers: {
           'Authorization': 'Bearer vsIzU_664pKkIg4xx2JQQMzPxphcXW-WqorLqVsX',
+          'Accept': 'text/event-stream',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -45,34 +59,56 @@ export default function ChatAssistant() {
             ...messages,
             userMessage
           ],
-          stream: false
+          stream: true
         }),
       });
-
+  
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-
-      const data = await response.json();
-      if (!data.success) {
-        throw new Error(data.errors?.[0]?.message || 'Failed to get response');
-      }
-
-      if (data.result && data.result.response) {
+  
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let fullResponse = '';
+  
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+  
+          const chunk = decoder.decode(value);
+          const lines = chunk.split('\n');
+  
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              try {
+                const data = JSON.parse(line.slice(6));
+                if (data.response) {
+                  fullResponse += data.response;
+                  setStreamingResponse(fullResponse); // 更新流式响应
+                }
+              } catch (e) {
+                console.error('Error parsing SSE data:', e);
+              }
+            }
+          }
+        }
+  
+        // 流式响应完成后，添加到消息列表
         setMessages(prev => [...prev, {
           role: 'assistant',
-          content: data.result.response
+          content: fullResponse
         }]);
-      } else {
-        throw new Error('Invalid response format');
       }
     } catch (error) {
       setError(error instanceof Error ? error.message : '发生错误，请稍后重试');
       console.error('Chat error:', error);
     } finally {
       setIsLoading(false);
+      setStreamingResponse(''); // 清空流式响应
     }
   };
+  
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -132,7 +168,17 @@ export default function ChatAssistant() {
                 </div>
               ))}
               
-              {isLoading && (
+              {/* 添加流式响应显示 */}
+              {isLoading && streamingResponse && (
+                <div className="flex justify-start">
+                  <div className="bg-gray-100 rounded-lg p-3 text-gray-800">
+                    {streamingResponse}
+                  </div>
+                </div>
+              )}
+              
+              {/* 加载提示 */}
+              {isLoading && !streamingResponse && (
                 <div className="flex justify-start">
                   <div className="bg-gray-100 rounded-lg p-3 text-gray-800 animate-pulse">
                     正在思考...
@@ -150,6 +196,7 @@ export default function ChatAssistant() {
               
               <div ref={messagesEndRef} />
             </div>
+
 
             <form onSubmit={handleSubmit} className="p-4 border-t">
               <div className="flex gap-2">
