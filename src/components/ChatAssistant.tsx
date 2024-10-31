@@ -46,7 +46,7 @@ export default function ChatAssistant() {
     setStreamingResponse('');
 
     try {
-      const response = await fetch('https://chat-api.945036663.workers.dev', { // 替换为你的 Worker URL
+      const response = await fetch('https://chat-api.newestgpt.com', { // 替换为你的 Worker URL
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
