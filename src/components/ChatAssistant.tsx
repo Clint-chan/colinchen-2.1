@@ -250,7 +250,7 @@ export default function ChatAssistant({ isOpen, setIsOpen }: ChatAssistantProps)
                 <>
                 <div className="text-center text-gray-500 mt-8">
                   <p>你好！我是陈定钢，一名AI模型开发工程师。</p>
-                  <p className="mt-2">有什么我可以帮你的吗？</p>
+                  <p className="mt-2">想跟我聊聊什么？☺</p>
                 </div>
 
                 {/* 快捷提示按钮 */}
