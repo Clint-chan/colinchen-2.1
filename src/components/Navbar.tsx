@@ -104,7 +104,7 @@ export default function Navbar({ isMenuOpen, setIsMenuOpen, toggleChat }: Navbar
               className="flex items-center px-3 py-2 ml-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300"
             >
               <MessageCircle className="w-4 h-4" />
-              <span className="ml-1">聊天</span>
+              <span className="ml-1">和我聊天</span>
             </button>
           </div>
 
@@ -115,7 +115,7 @@ export default function Navbar({ isMenuOpen, setIsMenuOpen, toggleChat }: Navbar
               className="flex items-center px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300"
             >
               <MessageCircle className="w-4 h-4" />
-              <span className="ml-1">聊天</span>
+              <span className="ml-1">和我聊天</span>
             </button>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
