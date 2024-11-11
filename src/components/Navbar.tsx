@@ -4,6 +4,7 @@ import { Menu, X, Home, User, Code2, Briefcase, GraduationCap, Trophy, Mail, Mes
 interface NavbarProps {
   isMenuOpen: boolean;
   setIsMenuOpen: (value: boolean) => void;
+  scrollToChatAssistant: () => void;
 }
 
 interface NavItem {
@@ -12,7 +13,7 @@ interface NavItem {
   icon: React.ReactNode;
 }
 
-export default function Navbar({ isMenuOpen, setIsMenuOpen }: NavbarProps) {
+export default function Navbar({ isMenuOpen, setIsMenuOpen, scrollToChatAssistant }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
 
@@ -99,12 +100,7 @@ export default function Navbar({ isMenuOpen, setIsMenuOpen }: NavbarProps) {
             ))}
             {/* Chat Button */}
             <button
-              onClick={() => {
-                const chatElement = document.querySelector('#chat-assistant');
-                if (chatElement) {
-                  chatElement.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
+              onClick={scrollToChatAssistant}
               className="flex items-center px-3 py-2 ml-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300"
             >
               <MessageCircle className="w-4 h-4" />
@@ -115,12 +111,7 @@ export default function Navbar({ isMenuOpen, setIsMenuOpen }: NavbarProps) {
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center space-x-2">
             <button
-              onClick={() => {
-                const chatElement = document.querySelector('#chat-assistant');
-                if (chatElement) {
-                  chatElement.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
+              onClick={scrollToChatAssistant}
               className="flex items-center px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300"
             >
               <MessageCircle className="w-4 h-4" />

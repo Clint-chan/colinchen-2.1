@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Menu, X, Download, Mail, Phone, MessageCircle } from 'lucide-react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -14,10 +14,19 @@ import ChatAssistant from './components/ChatAssistant';
 
 const App = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const chatAssistantRef = useRef(null);
+
+  const scrollToChatAssistant = () => {
+    chatAssistantRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <Navbar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+      <Navbar 
+        isMenuOpen={isMenuOpen} 
+        setIsMenuOpen={setIsMenuOpen} 
+        scrollToChatAssistant={scrollToChatAssistant}
+      />
       <main className="pt-16">
         <Hero />
         <About />
@@ -29,7 +38,9 @@ const App = () => {
         <Awards />
       </main>
       <Footer />
-      <ChatAssistant />
+      <div ref={chatAssistantRef}>
+        <ChatAssistant />
+      </div>
     </div>
   );
 };
