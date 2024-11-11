@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useState } from 'react';
 import { Menu, X, Download, Mail, Phone, MessageCircle } from 'lucide-react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -13,11 +13,11 @@ import Footer from './components/Footer';
 import ChatAssistant from './components/ChatAssistant';
 
 const App = () => {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const chatAssistantRef = useRef(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
-  const scrollToChatAssistant = () => {
-    chatAssistantRef.current?.scrollIntoView({ behavior: 'smooth' });
+  const toggleChat = () => {
+    setIsChatOpen(!isChatOpen);
   };
 
   return (
@@ -25,7 +25,7 @@ const App = () => {
       <Navbar 
         isMenuOpen={isMenuOpen} 
         setIsMenuOpen={setIsMenuOpen} 
-        scrollToChatAssistant={scrollToChatAssistant}
+        toggleChat={toggleChat}
       />
       <main className="pt-16">
         <Hero />
@@ -38,9 +38,7 @@ const App = () => {
         <Awards />
       </main>
       <Footer />
-      <div ref={chatAssistantRef}>
-        <ChatAssistant />
-      </div>
+      <ChatAssistant isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
     </div>
   );
 };
