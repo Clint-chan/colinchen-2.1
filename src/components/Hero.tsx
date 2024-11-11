@@ -1,5 +1,53 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Mail, Phone, MessageCircle, Brain, Database, Bot, FileText } from 'lucide-react';
+
+const TypewriterEffect = () => {
+  const [text, setText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [loopNum, setLoopNum] = useState(0);
+  const [typingSpeed, setTypingSpeed] = useState(150);
+
+  const words = ['Data Scientist', 'LLM Engineer'];
+  const period = 2000;
+
+  useEffect(() => {
+    let ticker = setInterval(() => {
+      tick();
+    }, typingSpeed);
+
+    return () => clearInterval(ticker);
+  }, [text, isDeleting]);
+
+  const tick = () => {
+    let i = loopNum % words.length;
+    let fullText = words[i];
+    let updatedText = isDeleting 
+      ? fullText.substring(0, text.length - 1)
+      : fullText.substring(0, text.length + 1);
+
+    setText(updatedText);
+
+    if (isDeleting) {
+      setTypingSpeed(prevSpeed => prevSpeed / 2);
+    }
+
+    if (!isDeleting && updatedText === fullText) {
+      setIsDeleting(true);
+      setTypingSpeed(period);
+    } else if (isDeleting && updatedText === '') {
+      setIsDeleting(false);
+      setLoopNum(loopNum + 1);
+      setTypingSpeed(150);
+    }
+  };
+
+  return (
+    <div className="h-8 text-xl font-medium text-blue-600">
+      <span>{text}</span>
+      <span className="animate-blink">|</span>
+    </div>
+  );
+};
 
 export default function Hero() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -89,6 +137,11 @@ export default function Hero() {
         <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-blue-800 to-purple-700 animate-gradient">
           陈定钢
         </h1>
+        
+        {/* 添加打字机效果组件 */}
+        <div className="mb-6">
+          <TypewriterEffect />
+        </div>
         
         <div className="flex justify-center gap-4 mb-8">
           <div className="flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-full">
