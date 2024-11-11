@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Menu, X, Download, Mail, Phone, MessageCircle } from 'lucide-react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -38,7 +37,7 @@ const App = () => {
         <Awards />
       </main>
       <Footer />
-      <ChatAssistant isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+      <ChatAssistant isOpen={isChatOpen} setIsOpen={setIsChatOpen} />
     </div>
   );
 };
