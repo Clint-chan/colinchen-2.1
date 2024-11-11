@@ -7,7 +7,7 @@ const TypewriterEffect = () => {
   const [loopNum, setLoopNum] = useState(0);
   const [typingSpeed, setTypingSpeed] = useState(150);
 
-  const words = ['Data Scientist', 'LLM Engineer'];
+  const words = ['AI Engineer','LLM Expert','Data Scientist'];
   const period = 2000;
 
   useEffect(() => {
