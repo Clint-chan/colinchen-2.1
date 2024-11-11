@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Code2, GitBranch, Timer, ChevronRight, Users, ChevronDown } from 'lucide-react';
+import { Code2, GitBranch, Timer, ChevronRight, Users, ChevronDown, ExternalLink } from 'lucide-react';
 
 const Projects = () => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -61,13 +61,19 @@ const Projects = () => {
   };
 
   return (
-    <section id="projects" className="py-20 bg-gradient-to-b from-gray-50 to-white">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="projects" className="py-20 bg-gradient-to-b from-gray-50 to-white relative">
+      {/* 装饰元素 */}
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-20" />
+      <div className="absolute top-20 right-20 w-64 h-64 bg-blue-100 rounded-full filter blur-3xl opacity-20 animate-pulse" />
+      <div className="absolute bottom-20 left-20 w-64 h-64 bg-purple-100 rounded-full filter blur-3xl opacity-20 animate-pulse delay-1000" />
+      
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4 relative inline-block">
             项目经验
+            <div className="absolute -bottom-2 left-0 w-full h-1 bg-blue-500 opacity-20 rounded-full" />
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <p className="text-gray-600 max-w-2xl mx-auto mt-4">
             深度参与多个大型项目开发，积累丰富的技术实践经验
           </p>
         </div>
@@ -76,77 +82,91 @@ const Projects = () => {
           {projects.map((project, index) => (
             <div
               key={index}
-              className="relative bg-white rounded-xl p-8 shadow-sm transition-all duration-300 hover:shadow-lg border border-gray-100"
+              className={`relative bg-white rounded-xl shadow-sm transition-all duration-500 ease-in-out
+                ${hoveredIndex === index ? 'shadow-xl transform -translate-y-1' : 'hover:shadow-lg'}
+                ${expandedIndex === index ? 'ring-2 ring-blue-100' : ''}
+                border border-gray-100 overflow-hidden`}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
             >
-              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
-                <div className="flex-1">
-                  <div className="flex items-center mb-2">
-                    <h3 className="text-xl font-bold text-gray-900">{project.title}</h3>
-                    <ChevronDown
-                      className={`w-5 h-5 ml-2 text-blue-500 cursor-pointer transition-transform duration-300 
-                      ${expandedIndex === index ? 'transform rotate-180' : ''}`}
-                      onClick={() => toggleExpand(index)}
-                    />
-                  </div>
-                  <div className="flex items-center text-gray-600 space-x-4">
-                    <span className="flex items-center">
-                      <Users className="w-4 h-4 mr-1" />
-                      {project.role}
-                    </span>
-                    <span className="flex items-center">
-                      <Timer className="w-4 h-4 mr-1" />
-                      {project.period}
-                    </span>
+              <div className="p-8">
+                <div 
+                  className="flex flex-col lg:flex-row lg:items-center lg:justify-between cursor-pointer"
+                  onClick={() => toggleExpand(index)}
+                >
+                  <div className="flex-1">
+                    <div className="flex items-center mb-2 group">
+                      <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                        {project.title}
+                      </h3>
+                      <ChevronDown
+                        className={`w-5 h-5 ml-2 text-blue-500 transition-transform duration-300 ease-in-out
+                        ${expandedIndex === index ? 'transform rotate-180' : 'group-hover:translate-y-0.5'}`}
+                      />
+                    </div>
+                    <div className="flex items-center text-gray-600 space-x-4">
+                      <span className="flex items-center px-3 py-1 bg-gray-50 rounded-full text-sm">
+                        <Users className="w-4 h-4 mr-1" />
+                        {project.role}
+                      </span>
+                      <span className="flex items-center px-3 py-1 bg-gray-50 rounded-full text-sm">
+                        <Timer className="w-4 h-4 mr-1" />
+                        {project.period}
+                      </span>
+                    </div>
                   </div>
                 </div>
-                {expandedIndex === index && (
-                  <div className="flex flex-wrap gap-2 mt-4 lg:mt-0">
+
+                <div className={`transition-all duration-500 ease-in-out overflow-hidden
+                  ${expandedIndex === index ? 'max-h-[1000px] opacity-100 mt-6' : 'max-h-0 opacity-0'}`}>
+                  <div className="flex flex-wrap gap-2 mb-6">
                     {project.tech.map((tech, idx) => (
                       <span
                         key={idx}
-                        className="px-3 py-1 text-sm bg-blue-50 text-blue-600 rounded-full"
+                        className="px-3 py-1 text-sm bg-blue-50 text-blue-600 rounded-full
+                          hover:bg-blue-100 transition-colors cursor-default"
                       >
                         {tech}
                       </span>
                     ))}
                   </div>
-                )}
-              </div>
 
-              {expandedIndex === index && (
-                <>
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {project.description.map((item, idx) => (
                       <div
                         key={idx}
-                        className="flex items-start"
+                        className="flex items-start group"
                       >
-                        <div className="flex-shrink-0 w-1 h-1 mt-2.5 bg-blue-500 rounded-full"></div>
-                        <p className="ml-3 text-gray-600">{item}</p>
+                        <div className="flex-shrink-0 w-1.5 h-1.5 mt-2.5 bg-blue-500 rounded-full
+                          group-hover:scale-110 transition-transform" />
+                        <p className="ml-3 text-gray-600 group-hover:text-gray-900 transition-colors">
+                          {item}
+                        </p>
                       </div>
                     ))}
                   </div>
 
                   <div className="mt-6 pt-6 border-t border-gray-100">
                     <div className="grid grid-cols-3 gap-4">
-                      <div className="text-center">
+                      <div className="text-center p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
                         <p className="text-sm text-gray-500 mb-1">团队规模</p>
                         <p className="font-semibold text-gray-900">{project.metrics.team}</p>
                       </div>
-                      <div className="text-center">
+                      <div className="text-center p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
                         <p className="text-sm text-gray-500 mb-1">测试覆盖率</p>
                         <p className="font-semibold text-gray-900">{project.metrics.coverage}</p>
                       </div>
-                      <div className="text-center">
+                      <div className="text-center p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
                         <p className="text-sm text-gray-500 mb-1">性能提升</p>
                         <p className="font-semibold text-gray-900">{project.metrics.performance}</p>
                       </div>
                     </div>
                   </div>
-                </>
-              )}
+                </div>
+              </div>
+
+              {/* 装饰性背景渐变 */}
+              <div className={`absolute inset-0 bg-gradient-to-r from-blue-50 to-purple-50 opacity-0 transition-opacity duration-300 ${hoveredIndex === index ? 'opacity-10' : ''}`} />
             </div>
           ))}
         </div>
