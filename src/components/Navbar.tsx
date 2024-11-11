@@ -74,7 +74,7 @@ export default function Navbar({ isMenuOpen, setIsMenuOpen, toggleChat }: Navbar
               }}
               className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
             >
-              CDG
+              陈定钢
             </a>
           </div>
           
