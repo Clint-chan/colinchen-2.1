@@ -1,9 +1,16 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, Dispatch, SetStateAction } from 'react';
+
 import { MessageCircle, X, Send } from 'lucide-react';
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
+}
+
+// 添加这个新的接口
+interface ChatAssistantProps {
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 // 快捷提示数组
@@ -23,13 +30,12 @@ const quickPrompts = [
 ];
 
 
-export default function ChatAssistant() {
-  const [isOpen, setIsOpen] = useState(false);
+export default function ChatAssistant({ isOpen, setIsOpen }: ChatAssistantProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [streamingResponse, setStreamingResponse] = useState(''); // 新增这行
+  const [streamingResponse, setStreamingResponse] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   
@@ -52,7 +58,7 @@ export default function ChatAssistant() {
   useEffect(() => {
     console.log('Chat window isOpen:', isOpen);
   }, [isOpen]);
-  
+
   useEffect(() => {
     const cleanup = () => {
       setStreamingResponse('');
