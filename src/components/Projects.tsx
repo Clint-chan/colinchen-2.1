@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Code2, GitBranch, Timer, ChevronRight, Users } from 'lucide-react';
+import { Code2, GitBranch, Timer, ChevronRight, Users, ChevronDown } from 'lucide-react';
 
 const Projects = () => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [expandedIndex, setExpandedIndex] = useState(null);
 
   const projects = [
     {
@@ -55,6 +56,10 @@ const Projects = () => {
     }
   ];
 
+  const toggleExpand = (index) => {
+    setExpandedIndex(expandedIndex === index ? null : index);
+  };
+
   return (
     <section id="projects" className="py-20 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -79,9 +84,10 @@ const Projects = () => {
                 <div className="flex-1">
                   <div className="flex items-center mb-2">
                     <h3 className="text-xl font-bold text-gray-900">{project.title}</h3>
-                    <ChevronRight 
-                      className={`w-5 h-5 ml-2 text-blue-500 transition-transform duration-300 
-                      ${hoveredIndex === index ? 'translate-x-1' : ''}`}
+                    <ChevronDown
+                      className={`w-5 h-5 ml-2 text-blue-500 cursor-pointer transition-transform duration-300 
+                      ${expandedIndex === index ? 'transform rotate-180' : ''}`}
+                      onClick={() => toggleExpand(index)}
                     />
                   </div>
                   <div className="flex items-center text-gray-600 space-x-4">
@@ -95,46 +101,52 @@ const Projects = () => {
                     </span>
                   </div>
                 </div>
-                <div className="flex flex-wrap gap-2 mt-4 lg:mt-0">
-                  {project.tech.map((tech, idx) => (
-                    <span
-                      key={idx}
-                      className="px-3 py-1 text-sm bg-blue-50 text-blue-600 rounded-full"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
+                {expandedIndex === index && (
+                  <div className="flex flex-wrap gap-2 mt-4 lg:mt-0">
+                    {project.tech.map((tech, idx) => (
+                      <span
+                        key={idx}
+                        className="px-3 py-1 text-sm bg-blue-50 text-blue-600 rounded-full"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
 
-              <div className="space-y-3">
-                {project.description.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-start"
-                  >
-                    <div className="flex-shrink-0 w-1 h-1 mt-2.5 bg-blue-500 rounded-full"></div>
-                    <p className="ml-3 text-gray-600">{item}</p>
+              {expandedIndex === index && (
+                <>
+                  <div className="space-y-3">
+                    {project.description.map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-start"
+                      >
+                        <div className="flex-shrink-0 w-1 h-1 mt-2.5 bg-blue-500 rounded-full"></div>
+                        <p className="ml-3 text-gray-600">{item}</p>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
 
-              <div className="mt-6 pt-6 border-t border-gray-100">
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="text-center">
-                    <p className="text-sm text-gray-500 mb-1">团队规模</p>
-                    <p className="font-semibold text-gray-900">{project.metrics.team}</p>
+                  <div className="mt-6 pt-6 border-t border-gray-100">
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="text-center">
+                        <p className="text-sm text-gray-500 mb-1">团队规模</p>
+                        <p className="font-semibold text-gray-900">{project.metrics.team}</p>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-sm text-gray-500 mb-1">测试覆盖率</p>
+                        <p className="font-semibold text-gray-900">{project.metrics.coverage}</p>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-sm text-gray-500 mb-1">性能提升</p>
+                        <p className="font-semibold text-gray-900">{project.metrics.performance}</p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-center">
-                    <p className="text-sm text-gray-500 mb-1">测试覆盖率</p>
-                    <p className="font-semibold text-gray-900">{project.metrics.coverage}</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-sm text-gray-500 mb-1">效率提升</p>
-                    <p className="font-semibold text-gray-900">{project.metrics.performance}</p>
-                  </div>
-                </div>
-              </div>
+                </>
+              )}
             </div>
           ))}
         </div>
