@@ -7,7 +7,6 @@ interface Message {
   content: string;
 }
 
-// 添加这个新的接口
 interface ChatAssistantProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
