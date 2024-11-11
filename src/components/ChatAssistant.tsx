@@ -50,6 +50,10 @@ export default function ChatAssistant() {
   }, [messages]);
 
   useEffect(() => {
+    console.log('Chat window isOpen:', isOpen);
+  }, [isOpen]);
+  
+  useEffect(() => {
     const cleanup = () => {
       setStreamingResponse('');
       setIsLoading(false);
