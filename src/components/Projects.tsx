@@ -82,10 +82,10 @@ const Projects = () => {
           {projects.map((project, index) => (
             <div
               key={index}
-              className={`relative bg-white rounded-xl shadow-sm transition-all duration-500 ease-in-out
+              className={`relative bg-white rounded-xl shadow-sm transition-all duration-300
                 ${hoveredIndex === index ? 'shadow-xl transform -translate-y-1' : 'hover:shadow-lg'}
                 ${expandedIndex === index ? 'ring-2 ring-blue-100' : ''}
-                border border-gray-100 overflow-hidden`}
+                border border-gray-100`}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
             >
@@ -100,8 +100,8 @@ const Projects = () => {
                         {project.title}
                       </h3>
                       <ChevronDown
-                        className={`w-5 h-5 ml-2 text-blue-500 transition-transform duration-300 ease-in-out
-                        ${expandedIndex === index ? 'transform rotate-180' : 'group-hover:translate-y-0.5'}`}
+                        className={`w-5 h-5 ml-2 text-blue-500 transition-transform duration-300
+                        ${expandedIndex === index ? 'transform rotate-180' : ''}`}
                       />
                     </div>
                     <div className="flex items-center text-gray-600 space-x-4">
@@ -117,56 +117,55 @@ const Projects = () => {
                   </div>
                 </div>
 
-                <div className={`transition-all duration-500 ease-in-out overflow-hidden
-                  ${expandedIndex === index ? 'max-h-[1000px] opacity-100 mt-6' : 'max-h-0 opacity-0'}`}>
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {project.tech.map((tech, idx) => (
-                      <span
-                        key={idx}
-                        className="px-3 py-1 text-sm bg-blue-50 text-blue-600 rounded-full
-                          hover:bg-blue-100 transition-colors cursor-default"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
+                {/* 展开的内容 */}
+                {expandedIndex === index && (
+                  <div className="mt-6">
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {project.tech.map((tech, idx) => (
+                        <span
+                          key={idx}
+                          className="px-3 py-1 text-sm bg-blue-50 text-blue-600 rounded-full
+                            hover:bg-blue-100 transition-colors cursor-default"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
 
-                  <div className="space-y-4">
-                    {project.description.map((item, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-start group"
-                      >
-                        <div className="flex-shrink-0 w-1.5 h-1.5 mt-2.5 bg-blue-500 rounded-full
-                          group-hover:scale-110 transition-transform" />
-                        <p className="ml-3 text-gray-600 group-hover:text-gray-900 transition-colors">
-                          {item}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
+                    <div className="space-y-4">
+                      {project.description.map((item, idx) => (
+                        <div
+                          key={idx}
+                          className="flex items-start group"
+                        >
+                          <div className="flex-shrink-0 w-1.5 h-1.5 mt-2.5 bg-blue-500 rounded-full
+                            group-hover:scale-110 transition-transform" />
+                          <p className="ml-3 text-gray-600 group-hover:text-gray-900 transition-colors">
+                            {item}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
 
-                  <div className="mt-6 pt-6 border-t border-gray-100">
-                    <div className="grid grid-cols-3 gap-4">
-                      <div className="text-center p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
-                        <p className="text-sm text-gray-500 mb-1">团队规模</p>
-                        <p className="font-semibold text-gray-900">{project.metrics.team}</p>
-                      </div>
-                      <div className="text-center p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
-                        <p className="text-sm text-gray-500 mb-1">测试覆盖率</p>
-                        <p className="font-semibold text-gray-900">{project.metrics.coverage}</p>
-                      </div>
-                      <div className="text-center p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
-                        <p className="text-sm text-gray-500 mb-1">性能提升</p>
-                        <p className="font-semibold text-gray-900">{project.metrics.performance}</p>
+                    <div className="mt-6 pt-6 border-t border-gray-100">
+                      <div className="grid grid-cols-3 gap-4">
+                        <div className="text-center p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                          <p className="text-sm text-gray-500 mb-1">团队规模</p>
+                          <p className="font-semibold text-gray-900">{project.metrics.team}</p>
+                        </div>
+                        <div className="text-center p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                          <p className="text-sm text-gray-500 mb-1">测试覆盖率</p>
+                          <p className="font-semibold text-gray-900">{project.metrics.coverage}</p>
+                        </div>
+                        <div className="text-center p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                          <p className="text-sm text-gray-500 mb-1">性能提升</p>
+                          <p className="font-semibold text-gray-900">{project.metrics.performance}</p>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
-
-              {/* 装饰性背景渐变 */}
-              <div className={`absolute inset-0 bg-gradient-to-r from-blue-50 to-purple-50 opacity-0 transition-opacity duration-300 ${hoveredIndex === index ? 'opacity-10' : ''}`} />
             </div>
           ))}
         </div>
