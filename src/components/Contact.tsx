@@ -32,7 +32,7 @@ const ContactCard = memo(({ icon, label, value }: ContactItem) => {
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(value);
-      alert(`已复制${label}: ${value}`);
+      alert(`已帮您复制我的${label}，欢迎您联系！`);
     } catch (err) {
       alert('复制失败');
     }
